@@ -6,6 +6,7 @@ const TodoItem = props => {
   const {deleteTodo, todoList, onEditedTask, onCheckTask} = props;
   const {id, description, completed} = todoList;
 
+
   const onDeleteTodo = () => {
     deleteTodo(id)
   }
@@ -22,12 +23,11 @@ const TodoItem = props => {
   const onChangeTitle = event => {
     setTaskTitle(event.target.value)
   }
-  const onClickCheckInput = event => {
+  const onClickCheckInput = () => {
     onCheckTask(id)
   }
 
   const isCheckedTrue = completed ? 'checked-title' : ''
-  console.log(completed)
   return (
     <li className='card'>
       {isEdit ? (

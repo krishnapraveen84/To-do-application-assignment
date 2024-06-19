@@ -18,6 +18,7 @@ const intiliazeServer = async () => {
         process.exit(1);
     }
 
+    //To Know Wheather the server is running or not
     app.get("/", (req, res) => {
         res.send("Server Started On port 3001.....")
     })
@@ -80,6 +81,23 @@ const intiliazeServer = async () => {
             }
         });
     });
+    
+    //Update Task Description
+    app.put("/tasks/update/:id", async (req, res) => {
+        const {id} = req.params;
+        const {description} = req.body;
+        const query =  `
+            UPDATE tasks SET description = ${description} WHERE id = ${id}
+        `;
+        await db.run(query, (err) => {
+            if (err) {
+                res.status(500).json({ error: err.message });
+            } else {
+                res.status(200).json({ id: parseInt(id), description });
+            }
+        })
+    })
+
 };
 
 intiliazeServer();
