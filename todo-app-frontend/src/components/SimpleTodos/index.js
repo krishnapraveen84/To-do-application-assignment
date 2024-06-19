@@ -4,43 +4,11 @@ import {v4 as uuidv4} from 'uuid'
 import TodoItem from '../TodoItem'
 import axios from 'axios';
 
-const initialTodosList = [
-  {
-    id: 1,
-    description: 'Book the ticket for today evening',
-  },
-  {
-    id: 2,
-    description: 'Rent the movie for tomorrow movie night',
-  },
-  {
-    id: 3,
-    description: 'Confirm the slot for the yoga session tomorrow morning',
-  },
-  {
-    id: 4,
-    description: 'Drop the parcel at Bloomingdale',
-  },
-  {
-    id: 5,
-    description: 'Order fruits on Big Basket',
-  },
-  {
-    id: 6,
-    description: 'Fix the production issue',
-  },
-  {
-    id: 7,
-    description: 'Confirm my slot for Saturday Night',
-  },
-  {
-    id: 8,
-    description: 'Get essentials for Sunday car wash',
-  },
-]
-const api = "http://localhost:3001/tasks"
+
+// const api = "http://localhost:3001/tasks"
 const deployedApi = "https://to-do-application-assignment.onrender.com/tasks"
-// Write your code here
+
+
 class SimpleTodos extends Component {
   state = {
     todoList: [],
@@ -52,65 +20,93 @@ class SimpleTodos extends Component {
   }
 
   fetchAllTasks = async () => {
-    const response = await axios.get(api);
-    if (response.status === 200){
-        this.setState({todoList: response.data})
-    }      
+    try{
+        const response = await axios.get(deployedApi);
+        if (response.status === 200){
+            this.setState({todoList: response.data})
+        }   
+    }
+    catch(err){
+        console.log(`Network Error: ${err}`)
+    }
+       
  };
 
   deleteTodo = async (todoId) => {
-    const {todoList} = this.state
-    const filteredUsersData = todoList.filter(each => each.id !== todoId)
-    this.setState({
-      todoList: filteredUsersData,
-    })
-    await axios.delete(`${api}/${todoId}`);      
+    try{
+        const {todoList} = this.state
+        const filteredUsersData = todoList.filter(each => each.id !== todoId)
+        this.setState({
+        todoList: filteredUsersData,
+        })
+        await axios.delete(`${deployedApi}/${todoId}`);  
+    } 
+    catch(err){
+        console.log(`Network Error: ${err}`)
+    }   
   }
   onChangeInput = event => {
     this.setState({inputData: event.target.value})
   }
   onAddNewTask = async () => {
-    const {inputData} = this.state
-    
-    const newArr = {id: uuidv4(), description: inputData}
-    this.setState(prev => ({
-        todoList: [...prev.todoList, newArr],
-    }))
-    await axios.post(api, { description: inputData })
-    
+    try{
+        const {inputData} = this.state;
+        const newArr = {id: uuidv4(), description: inputData}
+        this.setState(prev => ({
+            todoList: [...prev.todoList, newArr],
+        }));
+        await axios.post(deployedApi, { description: inputData });
+    }
+    catch(err){
+        console.log(`Network Error: ${err}`)
+    }   
   }
   onCheckTask = async (id) => {
-    const {todoList} = this.state;
-    const newArr = todoList.map(each => {
-        if(each.id === id){
-            return {...each, completed: !each.completed}
-        }
-        else{
-            return each
-        }
-    })
-    this.setState({todoList: newArr})
+    try{
+        const {todoList} = this.state;
+        const newArr = todoList.map(each => {
+            if(each.id === id){
+                return {...each, completed: !each.completed}
+            }
+            else{
+                return each
+            }
+        })
+        this.setState({todoList: newArr})
 
-    const task = todoList.find(each => each.id === id)
-    await axios.put(`${api}/${id}`, { completed: !task.completed});
+        const task = todoList.find(each => each.id === id)
+        await axios.put(`${deployedApi}/${id}`, { completed: !task.completed});
+    }
+    catch(err){
+        console.log(`Network Error: ${err}`)
+    } 
   }
 
 
   onSaveExitingTask = async (id, taskTitle) => {
-    const {todoList} = this.state
-    const newUpdatedList = todoList.map(each => {
-      if (each.id === id) {
-        return {...each, description: taskTitle}
-      } else {
-        return each
-      }
-    })
-    this.setState({todoList: newUpdatedList})
-    await axios.put(`${api}/update/${id}`, {description: taskTitle})
+    try{
+        const {todoList} = this.state
+        const newUpdatedList = todoList.map(each => {
+        if (each.id === id) {
+            return {...each, description: taskTitle}
+        } else {
+            return each
+        }
+        })
+        this.setState({todoList: newUpdatedList})
+        await axios.put(`${deployedApi}/update/${id}`, {description: taskTitle})
+    }
+    catch(err){
+        console.log(`Network Error: ${err}`)
+    } 
   }
   render() {
     const {todoList, inputData, isEdit} = this.state
     return (
+    <>
+      <nav className='nav-bar'>
+          <img className='log-img' src='https://shanture.com/wp-content/uploads/2024/06/cropped-2-180x131.png' />
+      </nav>
       <div className='bg-container'>
         <div className='todo-card'>
           <h1 className='heading'>Simple Todos</h1>
@@ -139,6 +135,7 @@ class SimpleTodos extends Component {
           </ul>
         </div>
       </div>
+    </>
     )
   }
 }

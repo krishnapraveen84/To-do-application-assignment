@@ -9,4 +9,5 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-image: linear-gradient(to right, rgb(63, 133, 247), rgb(172, 239, 248));
 }
