@@ -38,7 +38,8 @@ const initialTodosList = [
     description: 'Get essentials for Sunday car wash',
   },
 ]
-
+const api = "http://localhost:3001/tasks"
+const deployedApi = "https://to-do-application-assignment.onrender.com/tasks"
 // Write your code here
 class SimpleTodos extends Component {
   state = {
@@ -51,7 +52,7 @@ class SimpleTodos extends Component {
   }
 
   fetchAllTasks = async () => {
-    const response = await axios.get("https://to-do-application-assignment.onrender.com/tasks");
+    const response = await axios.get(api);
     if (response.status === 200){
         this.setState({todoList: response.data})
     }      
@@ -63,7 +64,7 @@ class SimpleTodos extends Component {
     this.setState({
       todoList: filteredUsersData,
     })
-    await axios.delete(`https://to-do-application-assignment.onrender.com/tasks/${todoId}`);      
+    await axios.delete(`${api}/${todoId}`);      
   }
   onChangeInput = event => {
     this.setState({inputData: event.target.value})
@@ -75,7 +76,7 @@ class SimpleTodos extends Component {
     this.setState(prev => ({
         todoList: [...prev.todoList, newArr],
     }))
-    await axios.post(`https://to-do-application-assignment.onrender.com/tasks`, { description: inputData })
+    await axios.post(api, { description: inputData })
     
   }
   onCheckTask = async (id) => {
@@ -91,7 +92,7 @@ class SimpleTodos extends Component {
     this.setState({todoList: newArr})
 
     const task = todoList.find(each => each.id === id)
-    await axios.put(`https://to-do-application-assignment.onrender.com/tasks/${id}`, { completed: !task.completed});
+    await axios.put(`${api}/${id}`, { completed: !task.completed});
   }
 
 
@@ -105,7 +106,7 @@ class SimpleTodos extends Component {
       }
     })
     this.setState({todoList: newUpdatedList})
-    await axios.put(`https://to-do-application-assignment.onrender.com/tasks/update/${id}`, {description: taskTitle})
+    await axios.put(`${api}/update/${id}`, {description: taskTitle})
   }
   render() {
     const {todoList, inputData, isEdit} = this.state

@@ -87,7 +87,7 @@ const intiliazeServer = async () => {
         const {id} = req.params;
         const {description} = req.body;
         const query =  `
-            UPDATE tasks SET description = ${description} WHERE id = ${id}
+            UPDATE tasks SET description = "${description}" WHERE id = ${id}
         `;
         await db.run(query, (err) => {
             if (err) {
